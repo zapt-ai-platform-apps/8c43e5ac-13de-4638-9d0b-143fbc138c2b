@@ -1,55 +1,69 @@
-# New App
+# Online Teaching Platform
 
 ## Overview
 
-New App is an online platform that allows users to create, manage, and share teaching outlines. It provides an intuitive interface for educators to build structured lesson plans, organize topics, and plan their teaching schedules effectively.
+The Online Teaching Platform is a web application that allows teachers to create and manage online courses and lessons. Students can browse available courses, enroll in them, and access lesson content. The platform supports rich text content using Markdown, and requires users to sign in to access features.
 
 ## User Journeys
 
-### 1. Create a New Teaching Outline
+### 1. Sign Up / Sign In
 
-1. **Navigate to the Home Page**: Open the app to view the home page displaying your existing teaching outlines.
-2. **Click 'Create New Outline'**: Select the 'Create New Outline' button to start a new teaching outline.
-3. **Enter Outline Details**:
-   - **Title**: Provide a meaningful title for your teaching outline.
-   - **Description**: Add an overview or summary of the outline.
-   - **Content**: Input the main content of your outline. You can use Markdown syntax to format the text.
-4. **Save the Outline**: Click the 'Save Outline' button to store your teaching outline.
-5. **Confirmation**: A confirmation message appears, and the new outline is added to your list.
+1. **Access the App**: Visit the application URL.
+2. **Sign In with ZAPT**: Click on "Sign in with ZAPT" to open the authentication modal.
+3. **Enter Credentials**: Provide your email address to receive a magic link or use social login providers ('Google', 'Facebook', 'Apple').
+4. **Verify and Login**: Follow the instructions sent to your email to complete the login process.
 
-### 2. View Existing Teaching Outlines
+### 2. Create a New Course (Teachers)
 
-1. **View Outline List**: The home page lists all your teaching outlines.
-2. **Select an Outline**: Click on the 'View' button of an outline to see its details.
-3. **Review Outline**: The app displays the title, description, and content of the outline in a readable format.
+1. **Navigate to Dashboard**: After signing in, you are directed to the dashboard displaying your courses.
+2. **Click 'Create New Course'**: Start a new course by clicking the button.
+3. **Enter Course Details**:
+   - **Title**: Provide a title for your course.
+   - **Description**: Add an overview or summary.
+4. **Save the Course**: Click 'Save Course' to add it to your courses.
 
-### 3. Edit a Teaching Outline
+### 3. Add Lessons to a Course (Teachers)
 
-1. **Select an Outline to Edit**: From the list, click the 'Edit' button next to the outline you wish to modify.
-2. **Modify Outline Details**: Update the title, description, or content fields as needed.
-3. **Save Changes**: Click 'Save Changes' to update the outline.
-4. **Confirmation**: A message confirms that your changes have been saved.
+1. **Select a Course**: From your courses list, choose a course to add lessons to.
+2. **Click 'Add Lesson'**: Begin creating a new lesson.
+3. **Enter Lesson Details**:
+   - **Title**: Provide a title for the lesson.
+   - **Content**: Add lesson content using Markdown for rich formatting.
+4. **Save the Lesson**: Click 'Save Lesson' to add it to the course.
 
-### 4. Delete a Teaching Outline
+### 4. View and Enroll in Courses (Students)
 
-1. **Select an Outline to Delete**: Click the 'Delete' button next to the outline you want to remove.
-2. **Confirm Deletion**: A prompt asks you to confirm the deletion.
-3. **Outline Removed**: Upon confirmation, the outline is deleted from your list.
+1. **Browse Courses**: After signing in, view the list of all available courses.
+2. **View Course Details**: Click on a course to see more information.
+3. **Enroll in Course**: Click 'Enroll' to enroll in the course and access its lessons.
+
+### 5. Access Lessons (Students)
+
+1. **Navigate to 'My Courses'**: View the courses you are enrolled in.
+2. **Select a Course**: Choose a course to study.
+3. **View Lessons**: Access the list of lessons within the course.
+4. **Read Lesson Content**: Click on a lesson to view its content.
+
+### 6. Edit or Delete Courses and Lessons (Teachers)
+
+1. **Manage Courses**: From the dashboard, view your courses.
+2. **Edit or Delete**: Use the 'Edit' or 'Delete' buttons next to each course or lesson.
+3. **Save Changes**: For edits, update the information and save changes. Confirm deletion when prompted.
 
 ## External APIs Used
 
-- **Progressier**: Used for Progressive Web App (PWA) support, enabling offline access and installation prompts.
-- **Sentry**: Implemented for error tracking and logging in both frontend and backend.
+- **Supabase Authentication**: Handles user authentication and session management.
 
 ## Environment Variables
 
-- `NEON_DB_URL`: The connection string for the Neon database.
-- `VITE_PUBLIC_SENTRY_DSN`: The DSN for Sentry error logging.
-- `VITE_PUBLIC_APP_ENV`: The environment in which the app is running (e.g., production, development).
-- `VITE_PUBLIC_APP_ID`: The unique identifier for the app used by Progressier.
+- `NEON_DB_URL`: Connection string for the Neon database.
+- `VITE_PUBLIC_SENTRY_DSN`: Sentry DSN for error tracking.
+- `VITE_PUBLIC_APP_ENV`: App environment (e.g., production, development).
+- `VITE_PUBLIC_APP_ID`: Public app ID for the application.
 
 ## Notes
 
-- This app does not require authentication and is free to use.
-- All data is stored securely in a Neon database using Drizzle ORM.
-- Markdown is supported in the content field, allowing for rich text formatting.
+- Authentication is required to access and interact with the platform.
+- The platform uses Markdown for rich text content in lessons.
+- Data is stored securely using a Neon database with Drizzle ORM.
+- The app is free to use and open to all users.
