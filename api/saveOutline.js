@@ -5,12 +5,12 @@ import * as Sentry from '@sentry/node';
 import { eq } from 'drizzle-orm';
 
 Sentry.init({
-  dsn: process.env.VITE_PUBLIC_SENTRY_DSN,
-  environment: process.env.VITE_PUBLIC_APP_ENV,
+  dsn: process.env.SENTRY_DSN,
+  environment: process.env.APP_ENV,
   initialScope: {
     tags: {
       type: 'backend',
-      projectId: process.env.PROJECT_ID,
+      projectId: process.env.APP_ID,
     },
   },
 });
@@ -27,7 +27,7 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Title and content are required' });
       }
 
-      const result = await db
+      const [result] = await db
         .insert(outlines)
         .values({
           title,
@@ -36,7 +36,7 @@ export default async function handler(req, res) {
         })
         .returning();
 
-      res.status(201).json(result[0]);
+      res.status(201).json(result);
     } else if (req.method === 'PUT') {
       const { id, title, description, content } = req.body;
 
@@ -44,13 +44,13 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'ID, title, and content are required' });
       }
 
-      const result = await db
+      const [result] = await db
         .update(outlines)
         .set({ title, description, content })
         .where(eq(outlines.id, id))
         .returning();
 
-      res.status(200).json(result[0]);
+      res.status(200).json(result);
     } else if (req.method === 'DELETE') {
       const { id } = req.body;
 

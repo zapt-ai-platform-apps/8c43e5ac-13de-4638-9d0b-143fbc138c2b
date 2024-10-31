@@ -1,6 +1,4 @@
-import { initializeZapt } from '@zapt/zapt-js';
-
-const { supabase } = initializeZapt(process.env.VITE_PUBLIC_APP_ID);
+import jwt from 'jsonwebtoken';
 
 export async function authenticateUser(req) {
   const authHeader = req.headers.authorization;
@@ -9,14 +7,10 @@ export async function authenticateUser(req) {
   }
 
   const token = authHeader.split(' ')[1];
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser(token);
-
-  if (error || !user) {
+  try {
+    const user = jwt.verify(token, process.env.SUPABASE_JWT_SECRET);
+    return user;
+  } catch (error) {
     throw new Error('Invalid token');
   }
-
-  return user;
 }

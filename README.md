@@ -1,8 +1,8 @@
-# New App
+# Online Teaching Platform
 
 ## Overview
 
-New App is an online teaching platform that allows educators to create and manage courses with ease. Students can browse available courses, enroll, and access lesson content. The platform supports rich content formatting using Markdown and requires users to sign in to access its features.
+The Online Teaching Platform is a web application that allows teachers to create and manage online courses and lessons. Students can browse available courses, enroll in them, and access lesson content. The platform supports rich text content using Markdown, and requires users to sign in to access features.
 
 ## User Journeys
 
@@ -15,12 +15,12 @@ New App is an online teaching platform that allows educators to create and manag
 
 ### 2. Create a New Course (Teachers)
 
-1. **Navigate to Dashboard**: After signing in, you are directed to the dashboard displaying available courses.
+1. **Navigate to Dashboard**: After signing in, you are directed to the dashboard displaying your courses.
 2. **Click 'Create New Course'**: Start a new course by clicking the button.
 3. **Enter Course Details**:
    - **Title**: Provide a title for your course.
    - **Description**: Add an overview or summary.
-4. **Save the Course**: Click 'Save Course' to add it to your list.
+4. **Save the Course**: Click 'Save Course' to add it to your courses.
 
 ### 3. Add Lessons to a Course (Teachers)
 
@@ -57,6 +57,9 @@ New App is an online teaching platform that allows educators to create and manag
 ## Environment Variables
 
 - `NEON_DB_URL`: Connection string for the Neon database.
+- `SUPABASE_URL`: Supabase API URL.
+- `SUPABASE_ANON_KEY`: Supabase anonymous key.
+- `SUPABASE_JWT_SECRET`: Supabase JWT secret for verifying tokens.
 - `VITE_PUBLIC_SENTRY_DSN`: Sentry DSN for error tracking.
 - `VITE_PUBLIC_APP_ENV`: App environment (e.g., production, development).
 - `VITE_PUBLIC_APP_ID`: Public app ID for the application.
@@ -67,4 +70,3 @@ New App is an online teaching platform that allows educators to create and manag
 - The platform uses Markdown for rich text content in lessons.
 - Data is stored securely using a Neon database with Drizzle ORM.
 - The app is free to use and open to all users.
-- Sentry is used for error tracking on both frontend and backend.
