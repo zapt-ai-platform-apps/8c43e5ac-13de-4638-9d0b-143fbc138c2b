@@ -1,7 +1,7 @@
 {
-  "name": "online-teaching-platform",
+  "name": "new-app",
   "version": "1.0.0",
-  "description": "A platform for teaching online courses",
+  "description": "An online platform for teaching and learning",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -13,6 +13,8 @@
     "@supabase/auth-ui-solid": "^0.3.8",
     "@supabase/auth-ui-shared": "^0.1.8",
     "@zapt/zapt-js": "^1.0.5",
+    "@sentry/browser": "8.35.0",
+    "@sentry/node": "8.35.0",
     "drizzle-orm": "^0.33.0",
     "solid-js": "^1.8.22",
     "solid-markdown": "^2.0.13"

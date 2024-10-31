@@ -1,14 +1,28 @@
-import { lessons } from '../drizzle/schema.js';
-import { courses } from '../drizzle/schema.js';
+import { lessons, courses } from '../drizzle/schema.js';
 import { authenticateUser } from './_apiUtils.js';
 import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
 import { eq, and } from 'drizzle-orm';
+import * as Sentry from '@sentry/node';
+
+Sentry.init({
+  dsn: process.env.VITE_PUBLIC_SENTRY_DSN,
+  environment: process.env.VITE_PUBLIC_APP_ENV,
+  initialScope: {
+    tags: {
+      type: 'backend',
+      projectId: process.env.PROJECT_ID,
+    },
+  },
+});
 
 export default async function handler(req, res) {
-  if (req.method === 'POST') {
-    try {
-      const user = await authenticateUser(req);
+  try {
+    const user = await authenticateUser(req);
+    const sql = neon(process.env.NEON_DB_URL);
+    const db = drizzle(sql);
+
+    if (req.method === 'POST') {
       const { courseId, title, content } = req.body;
 
       if (!courseId || !title || !content) {
@@ -17,17 +31,14 @@ export default async function handler(req, res) {
           .json({ error: 'Course ID, title, and content are required' });
       }
 
-      const sql = neon(process.env.NEON_DB_URL);
-      const db = drizzle(sql);
-
       // Verify that the user owns the course
-      const course = await db
+      const courseExists = await db
         .select()
         .from(courses)
         .where(and(eq(courses.id, courseId), eq(courses.userId, user.id)))
-        .first();
+        .then(result => result.length > 0);
 
-      if (!course) {
+      if (!courseExists) {
         return res.status(403).json({ error: 'Unauthorized' });
       }
 
@@ -41,13 +52,7 @@ export default async function handler(req, res) {
         .returning();
 
       res.status(201).json(result[0]);
-    } catch (error) {
-      console.error('Error saving lesson:', error);
-      res.status(500).json({ error: 'Error saving lesson' });
-    }
-  } else if (req.method === 'PUT') {
-    try {
-      const user = await authenticateUser(req);
+    } else if (req.method === 'PUT') {
       const { id, courseId, title, content } = req.body;
 
       if (!id || !courseId || !title || !content) {
@@ -56,17 +61,14 @@ export default async function handler(req, res) {
           .json({ error: 'ID, course ID, title, and content are required' });
       }
 
-      const sql = neon(process.env.NEON_DB_URL);
-      const db = drizzle(sql);
-
       // Verify that the user owns the course
-      const course = await db
+      const courseExists = await db
         .select()
         .from(courses)
         .where(and(eq(courses.id, courseId), eq(courses.userId, user.id)))
-        .first();
+        .then(result => result.length > 0);
 
-      if (!course) {
+      if (!courseExists) {
         return res.status(403).json({ error: 'Unauthorized' });
       }
 
@@ -77,43 +79,35 @@ export default async function handler(req, res) {
         .returning();
 
       res.status(200).json(result[0]);
-    } catch (error) {
-      console.error('Error updating lesson:', error);
-      res.status(500).json({ error: 'Error updating lesson' });
-    }
-  } else if (req.method === 'DELETE') {
-    try {
-      const user = await authenticateUser(req);
+    } else if (req.method === 'DELETE') {
       const { id } = req.body;
 
       if (!id) {
         return res.status(400).json({ error: 'ID is required' });
       }
 
-      const sql = neon(process.env.NEON_DB_URL);
-      const db = drizzle(sql);
-
       // Verify that the user owns the lesson
-      const lesson = await db
+      const lessonExists = await db
         .select()
         .from(lessons)
         .innerJoin(courses, eq(lessons.courseId, courses.id))
         .where(and(eq(lessons.id, id), eq(courses.userId, user.id)))
-        .first();
+        .then(result => result.length > 0);
 
-      if (!lesson) {
+      if (!lessonExists) {
         return res.status(403).json({ error: 'Unauthorized' });
       }
 
       await db.delete(lessons).where(eq(lessons.id, id));
 
       res.status(200).json({ message: 'Lesson deleted successfully' });
-    } catch (error) {
-      console.error('Error deleting lesson:', error);
-      res.status(500).json({ error: 'Error deleting lesson' });
+    } else {
+      res.setHeader('Allow', ['POST', 'PUT', 'DELETE']);
+      return res.status(405).end(`Method ${req.method} Not Allowed`);
     }
-  } else {
-    res.setHeader('Allow', ['POST', 'PUT', 'DELETE']);
-    return res.status(405).end(`Method ${req.method} Not Allowed`);
+  } catch (error) {
+    Sentry.captureException(error);
+    console.error('Error handling lesson:', error);
+    res.status(500).json({ error: 'Error handling lesson' });
   }
 }

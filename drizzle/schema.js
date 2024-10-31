@@ -1,4 +1,4 @@
-import { pgTable, serial, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, serial, text, timestamp, uuid, integer } from 'drizzle-orm/pg-core';
 
 export const courses = pgTable('courses', {
   id: serial('id').primaryKey(),
@@ -10,7 +10,7 @@ export const courses = pgTable('courses', {
 
 export const lessons = pgTable('lessons', {
   id: serial('id').primaryKey(),
-  courseId: serial('course_id').notNull(),
+  courseId: integer('course_id').notNull(),
   title: text('title').notNull(),
   content: text('content').notNull(),
   createdAt: timestamp('created_at').defaultNow(),
