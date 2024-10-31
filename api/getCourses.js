@@ -1,7 +1,8 @@
-import { courses } from '../drizzle/schema.js';
+import { courses, users } from '../drizzle/schema.js';
 import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
 import * as Sentry from '@sentry/node';
+import { eq } from 'drizzle-orm';
 
 Sentry.init({
   dsn: process.env.VITE_PUBLIC_SENTRY_DSN,
@@ -27,7 +28,7 @@ export default async function handler(req, res) {
     const result = await db
       .select()
       .from(courses)
-      .orderBy(courses.createdAt.desc())
+      .leftJoin(users, eq(courses.userId, users.id))
       .limit(100);
 
     res.status(200).json(result);

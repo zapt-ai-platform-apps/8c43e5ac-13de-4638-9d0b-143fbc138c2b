@@ -2,8 +2,8 @@ import { lessons, courses } from '../drizzle/schema.js';
 import { authenticateUser } from './_apiUtils.js';
 import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
-import { eq, and } from 'drizzle-orm';
 import * as Sentry from '@sentry/node';
+import { eq, and } from 'drizzle-orm';
 
 Sentry.init({
   dsn: process.env.VITE_PUBLIC_SENTRY_DSN,
@@ -32,13 +32,13 @@ export default async function handler(req, res) {
       }
 
       // Verify that the user owns the course
-      const courseExists = await db
+      const course = await db
         .select()
         .from(courses)
         .where(and(eq(courses.id, courseId), eq(courses.userId, user.id)))
-        .then(result => result.length > 0);
+        .limit(1);
 
-      if (!courseExists) {
+      if (course.length === 0) {
         return res.status(403).json({ error: 'Unauthorized' });
       }
 
@@ -62,13 +62,13 @@ export default async function handler(req, res) {
       }
 
       // Verify that the user owns the course
-      const courseExists = await db
+      const course = await db
         .select()
         .from(courses)
         .where(and(eq(courses.id, courseId), eq(courses.userId, user.id)))
-        .then(result => result.length > 0);
+        .limit(1);
 
-      if (!courseExists) {
+      if (course.length === 0) {
         return res.status(403).json({ error: 'Unauthorized' });
       }
 
@@ -87,14 +87,14 @@ export default async function handler(req, res) {
       }
 
       // Verify that the user owns the lesson
-      const lessonExists = await db
+      const lesson = await db
         .select()
         .from(lessons)
         .innerJoin(courses, eq(lessons.courseId, courses.id))
         .where(and(eq(lessons.id, id), eq(courses.userId, user.id)))
-        .then(result => result.length > 0);
+        .limit(1);
 
-      if (!lessonExists) {
+      if (lesson.length === 0) {
         return res.status(403).json({ error: 'Unauthorized' });
       }
 

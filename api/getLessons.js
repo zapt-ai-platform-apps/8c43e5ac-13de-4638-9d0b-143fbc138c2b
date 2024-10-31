@@ -1,8 +1,8 @@
 import { lessons } from '../drizzle/schema.js';
 import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
-import { eq, desc } from 'drizzle-orm';
 import * as Sentry from '@sentry/node';
+import { eq, desc } from 'drizzle-orm';
 
 Sentry.init({
   dsn: process.env.VITE_PUBLIC_SENTRY_DSN,

@@ -2,8 +2,8 @@ import { courses } from '../drizzle/schema.js';
 import { authenticateUser } from './_apiUtils.js';
 import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
-import { eq, and } from 'drizzle-orm';
 import * as Sentry from '@sentry/node';
+import { eq, and } from 'drizzle-orm';
 
 Sentry.init({
   dsn: process.env.VITE_PUBLIC_SENTRY_DSN,
